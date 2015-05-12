@@ -50,7 +50,7 @@ class QQ extends AbstractProvider  {
      */
     public function urlUserDetails(AccessToken $token)
     {
-        return 'https://graph.qq.com/oauth2.0/me'.$token;
+        return 'https://graph.qq.com/oauth2.0/me?access_token='.$token;
     }
 
     public function getUserDetails(\League\OAuth2\Client\Token\AccessToken $token)
@@ -60,11 +60,12 @@ class QQ extends AbstractProvider  {
         // pickup openid
         $first_open_brace_pos = strpos($response, '{');
         $last_close_brace_pos = strrpos($response, '}');
-        $openid_response = json_decode(substr(
+        $response = json_decode(substr(
             $response,
             $first_open_brace_pos,
             $last_close_brace_pos - $first_open_brace_pos + 1
         ));
+
         $this->openid = $response->openid;
         // fetch QQ user profile
         $params = [
