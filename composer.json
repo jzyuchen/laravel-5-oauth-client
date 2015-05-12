@@ -1,0 +1,20 @@
+{
+    "name": "jzyuchen/oauth-client",
+    "description": "oauth client for laravel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jzyuchen",
+            "email": "jzyuchen@163.com"
+        }
+    ],
+    "require": {
+      "php": ">=5.3.3",
+      "league/oauth2-client": "~0.5"
+    },
+    "autoload": {
+        "psr-4": {
+          "Jzyuchen\\OAuthClient\\": "src/"
+        }
+  }
+}
