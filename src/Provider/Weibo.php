@@ -9,11 +9,18 @@
 namespace Jzyuchen\OAuthClient\Provider;
 
 
+use League\OAuth2\Client\Entity\User;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 
 class Weibo extends AbstractProvider {
 
+    protected $apiDomain = 'https://api.weibo.com/2/';
+    protected $site = 'http://weibo.com/';
+
+    public function __construct($options=[]){
+        parent::__construct($options);
+    }
     /**
      * Get the URL that this provider uses to begin authorization.
      *
@@ -21,7 +28,7 @@ class Weibo extends AbstractProvider {
      */
     public function urlAuthorize()
     {
-        // TODO: Implement urlAuthorize() method.
+        return 'https://api.weibo.com/oauth2/authorize';
     }
 
     /**
@@ -31,7 +38,7 @@ class Weibo extends AbstractProvider {
      */
     public function urlAccessToken()
     {
-        // TODO: Implement urlAccessToken() method.
+        return 'https://api.weibo.com/oauth2/access_token';
     }
 
     /**
@@ -47,7 +54,7 @@ class Weibo extends AbstractProvider {
      */
     public function urlUserDetails(AccessToken $token)
     {
-        // TODO: Implement urlUserDetails() method.
+        return $this->apiDomain.'users/show.json?access_token='.$token->accessToken.'&uid='.$token->uid;
     }
 
     /**
@@ -60,6 +67,20 @@ class Weibo extends AbstractProvider {
      */
     public function userDetails($response, AccessToken $token)
     {
-        // TODO: Implement userDetails() method.
+        //dd($response);
+        $user = new User;
+        $user->uid = $response->id;
+        $user->nickname = isset($response->name) ? $response->name : $response->domain;
+        $user->name = isset($response->screen_name) ? $response->screen_name : null;
+        $user->location = isset($response->location) ? $response->location : null;
+        $user->imageUrl = isset($response->avatar_large) ? $response->avatar_large : null;
+        $user->description = isset($response->description) ? $response->description : null;
+        $user->gender = isset($response->gender) ? ($response->gender == 'm' ? '男': '女') : null;
+        $user->urls = [
+            'profile' => $this->site . (isset($response->profile_url) ? $response->profile_url : $response->id),
+            'site' => isset($response->url) && $response->url ? $response->url : null,
+        ];
+        dd($user);
+        return $user;
     }
 }
