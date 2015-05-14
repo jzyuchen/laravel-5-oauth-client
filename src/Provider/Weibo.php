@@ -19,6 +19,9 @@ class Weibo extends AbstractProvider {
     protected $site = 'http://weibo.com/';
 
     public function __construct($options=[]){
+        if (!array_has($options, 'redirectUri')){
+            $options['redirectUri'] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
+        }
         parent::__construct($options);
     }
     /**
@@ -80,7 +83,6 @@ class Weibo extends AbstractProvider {
             'profile' => $this->site . (isset($response->profile_url) ? $response->profile_url : $response->id),
             'site' => isset($response->url) && $response->url ? $response->url : null,
         ];
-        dd($user);
         return $user;
     }
 }

@@ -14,6 +14,9 @@ class QQ extends AbstractProvider  {
 
     public function __construct($options = []){
 
+        if (!array_has($options, 'redirectUri')){
+            $options['redirectUri'] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
+        }
         parent::__construct($options);
     }
 
